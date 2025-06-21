@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <title>Stopwatch App</title>
+  <style>
+    body {
+      font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to right, #ff416c, #ff4b2b);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      color: white;
+    }
+
+    .stopwatch {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 2rem;
+      border-radius: 15px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      text-align: center;
+    }
+
+    .time {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+
+    .buttons button {
+      background: white;
+      color: #ff416c;
+      border: none;
+      padding: 0.6rem 1.2rem;
+      margin: 0.5rem;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .buttons button:hover {
+      background: #ffe0e6;
+    }
+
+    .laps {
+      margin-top: 1rem;
+      max-height: 200px;
+      overflow-y: auto;
+      text-align: left;
+    }
+
+    .lap {
+      background: rgba(255, 255, 255, 0.2);
+      padding: 0.5rem;
+      border-radius: 5px;
+      margin-bottom: 0.3rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="stopwatch">
+    <div class="time" id="display">00:00:00</div>
+    <div class="buttons">
+      <button onclick="startStopwatch()">Start</button>
+      <button onclick="pauseStopwatch()">Pause</button>
+      <button onclick="resetStopwatch()">Reset</button>
+      <button onclick="lapTime()">Lap</button>
+    </div>
+    <div class="laps" id="laps"></div>
+  </div>
+
+  <script>
+    let startTime = 0;
+    let elapsedTime = 0;
+    let timerInterval;
+
+    function formatTime(ms) {
+      let totalSeconds = Math.floor(ms / 1000);
+      let minutes = Math.floor(totalSeconds / 60);
+      let seconds = totalSeconds % 60;
+      let milliseconds = Math.floor((ms % 1000) / 10);
+      return (
+        (minutes < 10 ? "0" : "") + minutes + ":" +
+        (seconds < 10 ? "0" : "") + seconds + ":" +
+        (milliseconds < 10 ? "0" : "") + milliseconds
+      );
+    }
+
+    function startStopwatch() {
+      if (!timerInterval) {
+        startTime = Date.now() - elapsedTime;
+        timerInterval = setInterval(() => {
+          elapsedTime = Date.now() - startTime;
+          document.getElementById("display").textContent = formatTime(elapsedTime);
+        }, 10);
+      }
+    }
+
+    function pauseStopwatch() {
+      clearInterval(timerInterval);
+      timerInterval = null;
+    }
+
+    function resetStopwatch() {
+      pauseStopwatch();
+      elapsedTime = 0;
+      document.getElementById("display").textContent = "00:00:00";
+      document.getElementById("laps").innerHTML = "";
+    }
+
+    function lapTime() {
+      if (elapsedTime === 0) return;
+      const lapContainer = document.getElementById("laps");
+      const lap = document.createElement("div");
+      lap.className = "lap";
+      lap.textContent = formatTime(elapsedTime);
+      lapContainer.prepend(lap);
+    }
+  </script>
+</body>
+</html>

@@ -1,2 +1,1 @@
-# SCT_WD_2
-Task 2
+Created A Stop Watch Web App using HTML, CSS and Java Script
